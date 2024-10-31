@@ -31,9 +31,10 @@ def get_all_books():
 
     books = db.session.scalars(query.order_by(Book.id))
 
-    books_response = [book.to_dict() for book in books]
+    fields_param = request.args.get('fields')
+    requested_fields = fields_param.split(',') if fields_param else None
 
-    return books_response
+    return [book.to_dict(requested_fields) for book in books]
 
 @books_bp.get('/<book_id>')
 def get_one_book(book_id):

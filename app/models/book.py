@@ -6,9 +6,12 @@ class Book(db.Model):
     title: Mapped[str]
     description: Mapped[str]
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description
-        }
+    def to_dict(self, fields=None):
+        if not fields:
+            return {
+                'id': self.id,
+                'title': self.title,
+                'description': self.description
+            }
+        
+        return {field: getattr(self, field) for field in fields if hasattr(self, field)}
