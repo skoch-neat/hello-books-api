@@ -1,7 +1,8 @@
 import os
-import pytest
 from dotenv import load_dotenv
 from flask.signals import request_finished
+import pytest
+
 from app import create_app
 from app.db import db
 from app.models.book import Book
@@ -11,8 +12,8 @@ load_dotenv()
 @pytest.fixture
 def app():
     test_config = {
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": os.environ.get('SQLALCHEMY_TEST_DATABASE_URI')
+        'TESTING': True,
+        'SQLALCHEMY_DATABASE_URI': os.environ.get('SQLALCHEMY_TEST_DATABASE_URI')
     }
     app = create_app(test_config)
 
@@ -34,13 +35,14 @@ def client(app):
 @pytest.fixture
 def two_saved_books(app):
     # Arrange
-    ocean_book = Book(title="Ocean Book",
-                      description="watr 4evr")
-    mountain_book = Book(title="Mountain Book",
-                         description="i luv 2 climb rocks")
+    ocean_book = Book(
+        title='Ocean Book',
+        description='watr 4evr'
+    )
+    mountain_book = Book(
+        title='Mountain Book',
+        description='i luv 2 climb rocks'
+    )
 
     db.session.add_all([ocean_book, mountain_book])
-    # Alternatively, we could do
-    # db.session.add(ocean_book)
-    # db.session.add(mountain_book)
     db.session.commit()

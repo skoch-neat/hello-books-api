@@ -1,7 +1,8 @@
 import os
 from flask import Flask
 from app.db import db, migrate
-from app.routes.book_routes import books_bp
+from app.models import book
+from app.routes.book_routes import bp as books_bp
 
 def create_app(config=None):
     app = Flask(__name__)

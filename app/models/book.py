@@ -15,3 +15,12 @@ class Book(db.Model):
             }
         
         return {field: getattr(self, field) for field in fields if hasattr(self, field)}
+    
+    @classmethod
+    def from_dict(cls, book_data):
+        new_book = cls(
+            title=book_data['title'],
+            description=book_data['description']
+        )
+
+        return new_book
