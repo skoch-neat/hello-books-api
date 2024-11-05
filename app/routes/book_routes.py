@@ -1,43 +1,18 @@
-from flask import Blueprint, Response, abort, make_response, request
+from flask import Blueprint, Response, request
 from app.db import db
 from app.models.book import Book
-from app.routes.route_utilities import validate_model
+from app.routes.route_utilities import create_model, get_models_with_filters, validate_model
 
 bp = Blueprint('books_bp', __name__, url_prefix='/books')
 
 @bp.post('')
 def create_book():
     request_body = request.get_json()
-
-    try:
-        new_book = Book.from_dict(request_body)
-    except KeyError as error:
-        response = {'message': f'Invalid request: missing {error.args[0]}'}
-        abort(make_response(response, 400))
-    
-    db.session.add(new_book)
-    db.session.commit()
-
-    return new_book.to_dict(), 201
+    return create_model(Book, request_body)
 
 @bp.get('')
 def get_all_books():
-    query = db.select(Book)
-
-    title_param = request.args.get('title')
-    if title_param:
-        query = query.where(Book.title.ilike(f'%{title_param}%'))
-
-    description_param = request.args.get('description')
-    if description_param:
-        query = query.where(Book.description.ilike(f'%{description_param}%'))
-
-    books = db.session.scalars(query.order_by(Book.id))
-
-    fields_param = request.args.get('fields')
-    requested_fields = fields_param.split(',') if fields_param else None
-
-    return [book.to_dict(requested_fields) for book in books]
+    return get_models_with_filters(Book, request.args)
 
 @bp.get('/<book_id>')
 def get_one_book(book_id):

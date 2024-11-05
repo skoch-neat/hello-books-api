@@ -9,14 +9,11 @@ class Author (db.Model):
     name: Mapped[str]
     books: Mapped[list["Book"]] = relationship(back_populates="author")
 
-    def to_dict(self, fields=None):
-        if not fields:
+    def to_dict(self):
             return {
                 'id': self.id,
                 'name': self.name
             }
-        
-        return {field: getattr(self, field) for field in fields if hasattr(self, field)}
     
     @classmethod
     def from_dict(cls, author_data):

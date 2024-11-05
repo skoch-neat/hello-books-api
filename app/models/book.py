@@ -12,26 +12,24 @@ class Book(db.Model):
     author_id: Mapped[Optional[int]] = mapped_column(ForeignKey("author.id"))
     author: Mapped[Optional["Author"]] = relationship(back_populates="books")
 
-    def to_dict(self, fields=None):
-        if not fields:
-            book_dict = {
-                'id': self.id,
-                'title': self.title,
-                'description': self.description
-            }
-        
-            if self.author:
-                book_dict['author'] = self.author.name
+    def to_dict(self):
+        book_dict = {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description
+        }
+    
+        if self.author:
+            book_dict['author'] = self.author.name
 
-            return book_dict
-            
-        return {field: getattr(self, field) for field in fields if hasattr(self, field)}
+        return book_dict
     
     @classmethod
     def from_dict(cls, book_data):
         new_book = cls(
             title=book_data['title'],
-            description=book_data['description']
+            description=book_data['description'],
+            author_id=book_data.get('author_id')
         )
 
         return new_book
