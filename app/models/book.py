@@ -20,9 +20,11 @@ class Book(db.Model):
                 'description': self.description
             }
         
-        if self.author:
-            book_dict['author'] = self.author.name
-        
+            if self.author:
+                book_dict['author'] = self.author.name
+
+            return book_dict
+            
         return {field: getattr(self, field) for field in fields if hasattr(self, field)}
     
     @classmethod
