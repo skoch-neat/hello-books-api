@@ -7,8 +7,7 @@ bp = Blueprint('books_bp', __name__, url_prefix='/books')
 
 @bp.post('')
 def create_book():
-    request_body = request.get_json()
-    return create_model(Book, request_body)
+    return create_model(Book, request.get_json())
 
 @bp.get('')
 def get_all_books():
